@@ -14,7 +14,7 @@ import org.junit.Test
 
 class FakeLocalDataSource : LocalDataSource {
     override fun getNodes(): Flow<List<Node>> {
-        return flowOf(listOf(Node(id = "node-1", name = "North Field Node", isOnline = true)))
+        return flowOf(listOf(Node(id = "node-1", farmId = "farm-1", name = "North Field Node", isOnline = true)))
     }
 }
 

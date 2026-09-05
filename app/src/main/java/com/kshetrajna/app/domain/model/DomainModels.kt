@@ -1,32 +1,37 @@
 package com.kshetrajna.app.domain.model
 
 /**
- * Domain entity representing a farm node.
+ * Domain entity representing an agricultural farm.
  */
-data class Node(
+data class Farm(
     val id: String,
     val name: String,
-    val isOnline: Boolean = false
+    val location: String? = null,
+    val createdAtEpochMillis: Long
 )
 
 /**
- * Synchronization states as defined in DATA_MODEL.md.
+ * Domain entity representing a crop profile with optimal target bounds (optional/nullable where unknown).
+ * No default/fake threshold values are hardcoded into the constructor.
  */
-enum class SyncStatus {
-    PENDING,
-    UPLOADING,
-    SYNCED,
-    FAILED
-}
+data class CropProfile(
+    val id: String,
+    val cropName: String,
+    val growthStage: String? = null,
+    val targetSoilMoistureMinPercent: Float? = null,
+    val targetSoilMoistureMaxPercent: Float? = null,
+    val targetPhMin: Float? = null,
+    val targetPhMax: Float? = null
+)
 
 /**
- * Measurement classifications as defined in DATA_MODEL.md.
+ * Domain entity representing a field sensor/actuator node.
  */
-enum class MeasurementCategory {
-    MEASURED,
-    MANUAL,
-    INFERRED,
-    EXTERNAL_FORECAST,
-    DEVICE_STATE,
-    SAFETY
-}
+data class Node(
+    val id: String,
+    val farmId: String,
+    val name: String,
+    val hardwareAddress: String? = null,
+    val isOnline: Boolean = false,
+    val lastSeenEpochMillis: Long? = null
+)
