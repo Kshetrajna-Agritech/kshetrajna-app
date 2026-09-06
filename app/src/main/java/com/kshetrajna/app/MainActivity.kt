@@ -22,6 +22,8 @@ import com.kshetrajna.app.data.repository.DefaultSyncRepository
 import com.kshetrajna.app.data.repository.DefaultTelemetryRepository
 import com.kshetrajna.app.data.repository.DefaultWeatherRepository
 import com.kshetrajna.app.data.simulation.SimulatedDataSourceSeeder
+import com.kshetrajna.app.domain.usecase.AcknowledgeAlertUseCase
+import com.kshetrajna.app.domain.usecase.GetAlertsAndSafetyUseCase
 import com.kshetrajna.app.domain.usecase.GetDashboardDataUseCase
 import com.kshetrajna.app.domain.usecase.GetFertilityDataUseCase
 import com.kshetrajna.app.domain.usecase.GetIrrigationDataUseCase
@@ -30,6 +32,7 @@ import com.kshetrajna.app.domain.usecase.GetSoilTelemetryUseCase
 import com.kshetrajna.app.domain.usecase.GetWeatherUseCase
 import com.kshetrajna.app.domain.usecase.RecordManualPhUseCase
 import com.kshetrajna.app.domain.usecase.SendIrrigationCommandUseCase
+import com.kshetrajna.app.ui.alerts.AlertsViewModel
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.fertility.FertilityViewModel
 import com.kshetrajna.app.ui.foundation.KshetrajnaApp
@@ -186,6 +189,32 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val alertsViewModel: AlertsViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+
+                val safetyRepo = DefaultSafetyRepository(localDataSource)
+                val irrigationRepo = DefaultIrrigationRepository(localDataSource)
+
+                val getAlertsAndSafetyUseCase = GetAlertsAndSafetyUseCase(
+                    safetyRepository = safetyRepo,
+                    irrigationRepository = irrigationRepo,
+                )
+                val acknowledgeAlertUseCase = AcknowledgeAlertUseCase(
+                    safetyRepository = safetyRepo,
+                )
+
+                return AlertsViewModel(
+                    getAlertsAndSafetyUseCase = getAlertsAndSafetyUseCase,
+                    acknowledgeAlertUseCase = acknowledgeAlertUseCase,
+                ) as T
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -211,6 +240,7 @@ class MainActivity : ComponentActivity() {
                     fertilityViewModel = fertilityViewModel,
                     weatherViewModel = weatherViewModel,
                     irrigationViewModel = irrigationViewModel,
+                    alertsViewModel = alertsViewModel,
                 )
             }
         }

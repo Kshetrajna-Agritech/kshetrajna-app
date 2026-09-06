@@ -26,6 +26,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kshetrajna.app.ui.alerts.AlertsViewModel
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.fertility.FertilityViewModel
 import com.kshetrajna.app.ui.irrigation.IrrigationViewModel
@@ -47,6 +48,7 @@ fun KshetrajnaApp(
     fertilityViewModel: FertilityViewModel,
     weatherViewModel: WeatherViewModel,
     irrigationViewModel: IrrigationViewModel,
+    alertsViewModel: AlertsViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -119,6 +121,7 @@ fun KshetrajnaApp(
             fertilityViewModel = fertilityViewModel,
             weatherViewModel = weatherViewModel,
             irrigationViewModel = irrigationViewModel,
+            alertsViewModel = alertsViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
