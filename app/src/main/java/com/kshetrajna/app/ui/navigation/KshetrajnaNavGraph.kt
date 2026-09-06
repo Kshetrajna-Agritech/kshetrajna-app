@@ -7,10 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.kshetrajna.app.ui.dashboard.DashboardScreen
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
+import com.kshetrajna.app.ui.fertility.FertilityScreen
+import com.kshetrajna.app.ui.fertility.FertilityViewModel
 import com.kshetrajna.app.ui.manualph.ManualPhScreen
 import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.screens.AlertsScreen
-import com.kshetrajna.app.ui.screens.FertilityScreen
 import com.kshetrajna.app.ui.screens.IrrigationScreen
 import com.kshetrajna.app.ui.screens.SettingsScreen
 import com.kshetrajna.app.ui.screens.WeatherScreen
@@ -26,6 +27,7 @@ fun KshetrajnaNavGraph(
     dashboardViewModel: DashboardViewModel,
     soilViewModel: SoilViewModel,
     manualPhViewModel: ManualPhViewModel,
+    fertilityViewModel: FertilityViewModel,
     modifier: Modifier = Modifier,
     startDestination: String = KshetrajnaDestination.Dashboard.route,
 ) {
@@ -44,7 +46,7 @@ fun KshetrajnaNavGraph(
             ManualPhScreen(viewModel = manualPhViewModel)
         }
         composable(KshetrajnaDestination.Fertility.route) {
-            FertilityScreen()
+            FertilityScreen(viewModel = fertilityViewModel)
         }
         composable(KshetrajnaDestination.Weather.route) {
             WeatherScreen()

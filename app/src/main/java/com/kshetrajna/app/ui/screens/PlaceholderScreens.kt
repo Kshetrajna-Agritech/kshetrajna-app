@@ -81,10 +81,7 @@ fun FoundationScreenContainer(
     }
 }
 
-@Composable
-fun FertilityScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
-    FoundationScreenContainer(title = "Fertility & NPK Inferences", viewModel = viewModel)
-}
+
 
 @Composable
 fun WeatherScreen(viewModel: FoundationViewModel = FoundationViewModel()) {

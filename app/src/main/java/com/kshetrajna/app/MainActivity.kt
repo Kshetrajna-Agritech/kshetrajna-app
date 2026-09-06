@@ -14,6 +14,7 @@ import com.kshetrajna.app.data.local.KshetrajnaDatabase
 import com.kshetrajna.app.data.local.RoomLocalDataSource
 import com.kshetrajna.app.data.remote.DefaultRemoteDataSource
 import com.kshetrajna.app.data.remote.RemoteDataSource
+import com.kshetrajna.app.data.repository.DefaultFertilityRepository
 import com.kshetrajna.app.data.repository.DefaultIrrigationRepository
 import com.kshetrajna.app.data.repository.DefaultManualPhRepository
 import com.kshetrajna.app.data.repository.DefaultSafetyRepository
@@ -22,10 +23,12 @@ import com.kshetrajna.app.data.repository.DefaultTelemetryRepository
 import com.kshetrajna.app.data.repository.DefaultWeatherRepository
 import com.kshetrajna.app.data.simulation.SimulatedDataSourceSeeder
 import com.kshetrajna.app.domain.usecase.GetDashboardDataUseCase
+import com.kshetrajna.app.domain.usecase.GetFertilityDataUseCase
 import com.kshetrajna.app.domain.usecase.GetManualPhEntriesUseCase
 import com.kshetrajna.app.domain.usecase.GetSoilTelemetryUseCase
 import com.kshetrajna.app.domain.usecase.RecordManualPhUseCase
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
+import com.kshetrajna.app.ui.fertility.FertilityViewModel
 import com.kshetrajna.app.ui.foundation.KshetrajnaApp
 import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.soil.SoilViewModel
@@ -102,6 +105,29 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val fertilityViewModel: FertilityViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val telemetryRepo = DefaultTelemetryRepository(localDataSource)
+                val manualPhRepo = DefaultManualPhRepository(localDataSource)
+                val fertilityRepo = DefaultFertilityRepository(localDataSource)
+
+                val getFertilityDataUseCase = GetFertilityDataUseCase(
+                    telemetryRepository = telemetryRepo,
+                    manualPhRepository = manualPhRepo,
+                    fertilityRepository = fertilityRepo,
+                )
+
+                return FertilityViewModel(
+                    getFertilityDataUseCase = getFertilityDataUseCase
+                ) as T
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -124,6 +150,7 @@ class MainActivity : ComponentActivity() {
                     dashboardViewModel = dashboardViewModel,
                     soilViewModel = soilViewModel,
                     manualPhViewModel = manualPhViewModel,
+                    fertilityViewModel = fertilityViewModel,
                 )
             }
         }
