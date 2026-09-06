@@ -24,13 +24,16 @@ import com.kshetrajna.app.data.repository.DefaultWeatherRepository
 import com.kshetrajna.app.data.simulation.SimulatedDataSourceSeeder
 import com.kshetrajna.app.domain.usecase.GetDashboardDataUseCase
 import com.kshetrajna.app.domain.usecase.GetFertilityDataUseCase
+import com.kshetrajna.app.domain.usecase.GetIrrigationDataUseCase
 import com.kshetrajna.app.domain.usecase.GetManualPhEntriesUseCase
 import com.kshetrajna.app.domain.usecase.GetSoilTelemetryUseCase
 import com.kshetrajna.app.domain.usecase.GetWeatherUseCase
 import com.kshetrajna.app.domain.usecase.RecordManualPhUseCase
+import com.kshetrajna.app.domain.usecase.SendIrrigationCommandUseCase
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.fertility.FertilityViewModel
 import com.kshetrajna.app.ui.foundation.KshetrajnaApp
+import com.kshetrajna.app.ui.irrigation.IrrigationViewModel
 import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.soil.SoilViewModel
 import com.kshetrajna.app.ui.theme.KshetrajnaTheme
@@ -149,6 +152,40 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val irrigationViewModel: IrrigationViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val remoteDataSource: RemoteDataSource = DefaultRemoteDataSource()
+
+                val irrigationRepo = DefaultIrrigationRepository(localDataSource)
+                val safetyRepo = DefaultSafetyRepository(localDataSource)
+                val telemetryRepo = DefaultTelemetryRepository(localDataSource)
+                val weatherRepo = DefaultWeatherRepository(localDataSource)
+                val syncRepo = DefaultSyncRepository(localDataSource, remoteDataSource)
+
+                val getIrrigationDataUseCase = GetIrrigationDataUseCase(
+                    irrigationRepository = irrigationRepo,
+                    safetyRepository = safetyRepo,
+                    telemetryRepository = telemetryRepo,
+                    weatherRepository = weatherRepo,
+                )
+                val sendIrrigationCommandUseCase = SendIrrigationCommandUseCase(
+                    irrigationRepository = irrigationRepo,
+                    safetyRepository = safetyRepo,
+                    syncRepository = syncRepo,
+                )
+
+                return IrrigationViewModel(
+                    getIrrigationDataUseCase = getIrrigationDataUseCase,
+                    sendIrrigationCommandUseCase = sendIrrigationCommandUseCase,
+                ) as T
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -173,6 +210,7 @@ class MainActivity : ComponentActivity() {
                     manualPhViewModel = manualPhViewModel,
                     fertilityViewModel = fertilityViewModel,
                     weatherViewModel = weatherViewModel,
+                    irrigationViewModel = irrigationViewModel,
                 )
             }
         }

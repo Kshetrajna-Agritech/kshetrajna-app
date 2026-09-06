@@ -9,10 +9,11 @@ import com.kshetrajna.app.ui.dashboard.DashboardScreen
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.fertility.FertilityScreen
 import com.kshetrajna.app.ui.fertility.FertilityViewModel
+import com.kshetrajna.app.ui.irrigation.IrrigationScreen
+import com.kshetrajna.app.ui.irrigation.IrrigationViewModel
 import com.kshetrajna.app.ui.manualph.ManualPhScreen
 import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.screens.AlertsScreen
-import com.kshetrajna.app.ui.screens.IrrigationScreen
 import com.kshetrajna.app.ui.screens.SettingsScreen
 import com.kshetrajna.app.ui.soil.SoilScreen
 import com.kshetrajna.app.ui.soil.SoilViewModel
@@ -30,6 +31,7 @@ fun KshetrajnaNavGraph(
     manualPhViewModel: ManualPhViewModel,
     fertilityViewModel: FertilityViewModel,
     weatherViewModel: WeatherViewModel,
+    irrigationViewModel: IrrigationViewModel,
     modifier: Modifier = Modifier,
     startDestination: String = KshetrajnaDestination.Dashboard.route,
 ) {
@@ -54,7 +56,7 @@ fun KshetrajnaNavGraph(
             WeatherScreen(viewModel = weatherViewModel)
         }
         composable(KshetrajnaDestination.Irrigation.route) {
-            IrrigationScreen()
+            IrrigationScreen(viewModel = irrigationViewModel)
         }
         composable(KshetrajnaDestination.Alerts.route) {
             AlertsScreen()
