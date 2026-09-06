@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.navigation.KshetrajnaDestination
 import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
+import com.kshetrajna.app.ui.soil.SoilViewModel
 
 /**
  * Top-level Application Scaffold establishing UI layout and navigation foundation.
@@ -37,6 +38,7 @@ import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
 @Composable
 fun KshetrajnaApp(
     dashboardViewModel: DashboardViewModel,
+    soilViewModel: SoilViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -104,6 +106,7 @@ fun KshetrajnaApp(
         KshetrajnaNavGraph(
             navController = navController,
             dashboardViewModel = dashboardViewModel,
+            soilViewModel = soilViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }

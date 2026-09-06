@@ -21,8 +21,10 @@ import com.kshetrajna.app.data.repository.DefaultTelemetryRepository
 import com.kshetrajna.app.data.repository.DefaultWeatherRepository
 import com.kshetrajna.app.data.simulation.SimulatedDataSourceSeeder
 import com.kshetrajna.app.domain.usecase.GetDashboardDataUseCase
+import com.kshetrajna.app.domain.usecase.GetSoilTelemetryUseCase
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.foundation.KshetrajnaApp
+import com.kshetrajna.app.ui.soil.SoilViewModel
 import com.kshetrajna.app.ui.theme.KshetrajnaTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,6 +60,25 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val soilViewModel: SoilViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val telemetryRepo = DefaultTelemetryRepository(localDataSource)
+
+                val getSoilTelemetryUseCase = GetSoilTelemetryUseCase(
+                    telemetryRepository = telemetryRepo,
+                )
+
+                return SoilViewModel(
+                    getSoilTelemetryUseCase = getSoilTelemetryUseCase
+                ) as T
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -76,7 +97,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KshetrajnaTheme {
-                KshetrajnaApp(dashboardViewModel = dashboardViewModel)
+                KshetrajnaApp(
+                    dashboardViewModel = dashboardViewModel,
+                    soilViewModel = soilViewModel,
+                )
             }
         }
     }
