@@ -68,3 +68,16 @@ data class NpkResult(
     val confidenceScore: Float? = null,
     val category: MeasurementCategory = MeasurementCategory.INFERRED
 )
+
+/**
+ * Contextual inputs (EC, soil temperature, soil moisture, manual pH) and latest NPK inference status.
+ * Preserves strict measurement provenance and explicit model availability state.
+ */
+data class FertilityData(
+    val nodeId: String = "sim_node_01",
+    val latestReading: SensorReading? = null,
+    val latestManualPh: ManualPH? = null,
+    val latestNpkResult: NpkResult? = null,
+    val isModelConfigured: Boolean = false,
+    val modelStatusMessage: String = "NPK inference engine model formula and calibration constants are pending approved contract specification (TBD)."
+)

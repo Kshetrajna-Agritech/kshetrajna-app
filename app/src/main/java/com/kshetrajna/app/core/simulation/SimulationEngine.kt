@@ -233,11 +233,11 @@ class SimulationEngine(
             id = "sim_npk_$step",
             nodeId = nodeId,
             timestampEpochMillis = timestamp,
-            inferredNitrogenPpm = 18.0f + (step % 4),
-            inferredPhosphorusPpm = 8.5f + (step % 2),
-            inferredPotassiumPpm = 22.0f + (step % 5),
-            modelVersion = "simulated_model_v1",
-            confidenceScore = 0.85f,
+            inferredNitrogenPpm = null,
+            inferredPhosphorusPpm = null,
+            inferredPotassiumPpm = null,
+            modelVersion = "TBD_UNCONFIGURED",
+            confidenceScore = null,
             category = MeasurementCategory.INFERRED
         )
     }
