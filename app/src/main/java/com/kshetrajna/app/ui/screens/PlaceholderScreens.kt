@@ -82,11 +82,6 @@ fun FoundationScreenContainer(
 }
 
 @Composable
-fun DashboardScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
-    FoundationScreenContainer(title = "Dashboard", viewModel = viewModel)
-}
-
-@Composable
 fun SoilScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
     FoundationScreenContainer(title = "Soil Telemetry", viewModel = viewModel)
 }
