@@ -19,7 +19,7 @@ Every field requires a name, type, unit where applicable, required/optional stat
 
 ## Known concepts
 SensorReading includes soil moisture, soil temperature, EC, air temperature, and air humidity where available.
-ManualPH is app-entered.
+ManualPH is app-entered. Numerical domain range for pH is unresolved and marked as TBD (only input-format validation is enforced; no invented range constraint).
 NpkResult is inferred.
 WeatherData is external/forecast.
 IrrigationState represents command/device state.
