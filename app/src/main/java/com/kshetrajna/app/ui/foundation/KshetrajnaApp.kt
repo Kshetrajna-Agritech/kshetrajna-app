@@ -32,6 +32,7 @@ import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.navigation.KshetrajnaDestination
 import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
 import com.kshetrajna.app.ui.soil.SoilViewModel
+import com.kshetrajna.app.ui.weather.WeatherViewModel
 
 /**
  * Top-level Application Scaffold establishing UI layout and navigation foundation.
@@ -43,6 +44,7 @@ fun KshetrajnaApp(
     soilViewModel: SoilViewModel,
     manualPhViewModel: ManualPhViewModel,
     fertilityViewModel: FertilityViewModel,
+    weatherViewModel: WeatherViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -113,6 +115,7 @@ fun KshetrajnaApp(
             soilViewModel = soilViewModel,
             manualPhViewModel = manualPhViewModel,
             fertilityViewModel = fertilityViewModel,
+            weatherViewModel = weatherViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }

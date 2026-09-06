@@ -14,9 +14,10 @@ import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.screens.AlertsScreen
 import com.kshetrajna.app.ui.screens.IrrigationScreen
 import com.kshetrajna.app.ui.screens.SettingsScreen
-import com.kshetrajna.app.ui.screens.WeatherScreen
 import com.kshetrajna.app.ui.soil.SoilScreen
 import com.kshetrajna.app.ui.soil.SoilViewModel
+import com.kshetrajna.app.ui.weather.WeatherScreen
+import com.kshetrajna.app.ui.weather.WeatherViewModel
 
 /**
  * Root navigation graph mapping top-level destinations to screen composables.
@@ -28,6 +29,7 @@ fun KshetrajnaNavGraph(
     soilViewModel: SoilViewModel,
     manualPhViewModel: ManualPhViewModel,
     fertilityViewModel: FertilityViewModel,
+    weatherViewModel: WeatherViewModel,
     modifier: Modifier = Modifier,
     startDestination: String = KshetrajnaDestination.Dashboard.route,
 ) {
@@ -49,7 +51,7 @@ fun KshetrajnaNavGraph(
             FertilityScreen(viewModel = fertilityViewModel)
         }
         composable(KshetrajnaDestination.Weather.route) {
-            WeatherScreen()
+            WeatherScreen(viewModel = weatherViewModel)
         }
         composable(KshetrajnaDestination.Irrigation.route) {
             IrrigationScreen()

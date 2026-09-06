@@ -83,10 +83,7 @@ fun FoundationScreenContainer(
 
 
 
-@Composable
-fun WeatherScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
-    FoundationScreenContainer(title = "Weather Context", viewModel = viewModel)
-}
+
 
 @Composable
 fun IrrigationScreen(viewModel: FoundationViewModel = FoundationViewModel()) {

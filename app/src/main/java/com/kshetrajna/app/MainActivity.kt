@@ -26,6 +26,7 @@ import com.kshetrajna.app.domain.usecase.GetDashboardDataUseCase
 import com.kshetrajna.app.domain.usecase.GetFertilityDataUseCase
 import com.kshetrajna.app.domain.usecase.GetManualPhEntriesUseCase
 import com.kshetrajna.app.domain.usecase.GetSoilTelemetryUseCase
+import com.kshetrajna.app.domain.usecase.GetWeatherUseCase
 import com.kshetrajna.app.domain.usecase.RecordManualPhUseCase
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.fertility.FertilityViewModel
@@ -33,6 +34,7 @@ import com.kshetrajna.app.ui.foundation.KshetrajnaApp
 import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.soil.SoilViewModel
 import com.kshetrajna.app.ui.theme.KshetrajnaTheme
+import com.kshetrajna.app.ui.weather.WeatherViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -128,6 +130,25 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val weatherViewModel: WeatherViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val weatherRepo = DefaultWeatherRepository(localDataSource)
+
+                val getWeatherUseCase = GetWeatherUseCase(
+                    weatherRepository = weatherRepo,
+                )
+
+                return WeatherViewModel(
+                    getWeatherUseCase = getWeatherUseCase
+                ) as T
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -151,6 +172,7 @@ class MainActivity : ComponentActivity() {
                     soilViewModel = soilViewModel,
                     manualPhViewModel = manualPhViewModel,
                     fertilityViewModel = fertilityViewModel,
+                    weatherViewModel = weatherViewModel,
                 )
             }
         }
