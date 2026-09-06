@@ -1,9 +1,13 @@
 package com.kshetrajna.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.kshetrajna.app.core.simulation.SimulationScenario
 import com.kshetrajna.app.data.local.KshetrajnaDatabase
@@ -25,38 +29,49 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private val dashboardViewModel: DashboardViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val remoteDataSource: RemoteDataSource = DefaultRemoteDataSource()
+
+                val telemetryRepo = DefaultTelemetryRepository(localDataSource)
+                val weatherRepo = DefaultWeatherRepository(localDataSource)
+                val irrigationRepo = DefaultIrrigationRepository(localDataSource)
+                val safetyRepo = DefaultSafetyRepository(localDataSource)
+                val syncRepo = DefaultSyncRepository(localDataSource, remoteDataSource)
+
+                val getDashboardDataUseCase = GetDashboardDataUseCase(
+                    telemetryRepository = telemetryRepo,
+                    weatherRepository = weatherRepo,
+                    irrigationRepository = irrigationRepo,
+                    safetyRepository = safetyRepo,
+                    syncRepository = syncRepo,
+                )
+
+                return DashboardViewModel(
+                    getDashboardDataUseCase = getDashboardDataUseCase
+                ) as T
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val database = KshetrajnaDatabase.getInstance(this)
-        val localDataSource = RoomLocalDataSource(database)
-        val remoteDataSource: RemoteDataSource = DefaultRemoteDataSource()
-
-        val telemetryRepo = DefaultTelemetryRepository(localDataSource)
-        val weatherRepo = DefaultWeatherRepository(localDataSource)
-        val irrigationRepo = DefaultIrrigationRepository(localDataSource)
-        val safetyRepo = DefaultSafetyRepository(localDataSource)
-        val syncRepo = DefaultSyncRepository(localDataSource, remoteDataSource)
-
-        val getDashboardDataUseCase = GetDashboardDataUseCase(
-            telemetryRepository = telemetryRepo,
-            weatherRepository = weatherRepo,
-            irrigationRepository = irrigationRepo,
-            safetyRepository = safetyRepo,
-            syncRepository = syncRepo
-        )
-
-        dashboardViewModel = DashboardViewModel(
-            getDashboardDataUseCase = getDashboardDataUseCase
-        )
-
-        // Seed initial simulation scenario data into local database for offline dashboard rendering
+        // Seed initial simulation scenario data safely on IO dispatcher
         lifecycleScope.launch(Dispatchers.IO) {
-            val seeder = SimulatedDataSourceSeeder()
-            seeder.seedScenario(localDataSource, SimulationScenario.NORMAL_FARM, steps = 1)
+            try {
+                val database = KshetrajnaDatabase.getInstance(applicationContext)
+                val localDataSource = RoomLocalDataSource(database)
+                val seeder = SimulatedDataSourceSeeder()
+                seeder.seedScenario(localDataSource, SimulationScenario.NORMAL_FARM, steps = 1)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error seeding initial simulation scenario", e)
+            }
         }
 
         setContent {
