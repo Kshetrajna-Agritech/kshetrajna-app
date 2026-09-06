@@ -27,15 +27,16 @@ sealed class KshetrajnaDestination(
     data object Settings : KshetrajnaDestination("settings", "Settings", Icons.Default.Settings)
 
     companion object {
-        val topLevelDestinations = listOf(
-            Dashboard,
-            Soil,
-            ManualPH,
-            Fertility,
-            Weather,
-            Irrigation,
-            Alerts,
-            Settings,
-        )
+        val topLevelDestinations: List<KshetrajnaDestination>
+            get() = listOf(
+                Dashboard,
+                Soil,
+                ManualPH,
+                Fertility,
+                Weather,
+                Irrigation,
+                Alerts,
+                Settings,
+            )
     }
 }
