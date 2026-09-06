@@ -16,6 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kshetrajna.app.ui.dashboard.DashboardViewModel
 import com.kshetrajna.app.ui.navigation.KshetrajnaDestination
 import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
 
@@ -25,6 +26,7 @@ import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KshetrajnaApp(
+    dashboardViewModel: DashboardViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -70,6 +72,7 @@ fun KshetrajnaApp(
     ) { innerPadding ->
         KshetrajnaNavGraph(
             navController = navController,
+            dashboardViewModel = dashboardViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
