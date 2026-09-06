@@ -87,10 +87,7 @@ fun FoundationScreenContainer(
 
 
 
-@Composable
-fun AlertsScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
-    FoundationScreenContainer(title = "Safety & System Alerts", viewModel = viewModel)
-}
+
 
 @Composable
 fun SettingsScreen(viewModel: FoundationViewModel = FoundationViewModel()) {

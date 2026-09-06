@@ -88,3 +88,14 @@ data class IrrigationData(
     val latestReading: SensorReading? = null,
     val latestWeather: WeatherData? = null,
 )
+
+/**
+ * Composite domain representation for Alerts & Safety UI observation.
+ */
+data class AlertsAndSafetyData(
+    val nodeId: String = "sim_node_01",
+    val safetyState: SafetyState? = null,
+    val activeAlerts: List<Alert> = emptyList(),
+    val alertHistory: List<Alert> = emptyList(),
+    val latestIrrigationState: IrrigationState? = null,
+)
