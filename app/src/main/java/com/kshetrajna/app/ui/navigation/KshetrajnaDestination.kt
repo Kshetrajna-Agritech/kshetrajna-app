@@ -15,16 +15,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class KshetrajnaDestination(
     val route: String,
     val title: String,
+    val shortTitle: String,
     val icon: ImageVector,
 ) {
-    data object Dashboard : KshetrajnaDestination("dashboard", "Dashboard", Icons.Default.Home)
-    data object Soil : KshetrajnaDestination("soil", "Soil Telemetry", Icons.Default.Info)
-    data object ManualPH : KshetrajnaDestination("manual_ph", "Manual pH", Icons.Default.Edit)
-    data object Fertility : KshetrajnaDestination("fertility", "Fertility & NPK", Icons.Default.Info)
-    data object Weather : KshetrajnaDestination("weather", "Weather Context", Icons.Default.Refresh)
-    data object Irrigation : KshetrajnaDestination("irrigation", "Irrigation", Icons.Default.Refresh)
-    data object Alerts : KshetrajnaDestination("alerts", "Alerts", Icons.Default.Notifications)
-    data object Settings : KshetrajnaDestination("settings", "Settings", Icons.Default.Settings)
+    data object Dashboard : KshetrajnaDestination("dashboard", "Dashboard", "Dashboard", Icons.Default.Home)
+    data object Soil : KshetrajnaDestination("soil", "Soil Telemetry", "Soil", Icons.Default.Info)
+    data object ManualPH : KshetrajnaDestination("manual_ph", "Manual pH", "Manual pH", Icons.Default.Edit)
+    data object Fertility : KshetrajnaDestination("fertility", "Fertility & NPK", "Fertility", Icons.Default.Info)
+    data object Weather : KshetrajnaDestination("weather", "Weather Context", "Weather", Icons.Default.Refresh)
+    data object Irrigation : KshetrajnaDestination("irrigation", "Irrigation", "Irrigation", Icons.Default.Refresh)
+    data object Alerts : KshetrajnaDestination("alerts", "Alerts", "Alerts", Icons.Default.Notifications)
+    data object Settings : KshetrajnaDestination("settings", "Settings", "Settings", Icons.Default.Settings)
 
     companion object {
         val topLevelDestinations: List<KshetrajnaDestination>

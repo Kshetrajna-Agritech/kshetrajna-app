@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kshetrajna.app.core.state.UiState
 import com.kshetrajna.app.domain.model.ActuatorStatus
@@ -172,8 +173,8 @@ fun SafetyStatusBanner(
             "SAFETY STATUS: NORMAL"
         )
         SystemSafetyStatus.WARNING -> Triple(
-            Color(0xFFFFF3CD),
-            Color(0xFF856404),
+            MaterialTheme.colorScheme.tertiaryContainer,
+            MaterialTheme.colorScheme.onTertiaryContainer,
             "SAFETY STATUS: WARNING"
         )
         SystemSafetyStatus.LOCKED -> Triple(
@@ -202,7 +203,9 @@ fun SafetyStatusBanner(
                 text = labelText,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = textColor
+                color = textColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             val faults = safetyState?.activeFaults ?: emptyList()
             if (faults.isNotEmpty()) {
@@ -242,8 +245,12 @@ fun SyncStatusCard(syncStatus: SyncStatus) {
             Text(
                 text = "Data Synchronization",
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f, fill = false),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
+            Spacer(modifier = Modifier.width(8.dp))
             BadgeText(text = statusText, color = badgeColor)
         }
     }
@@ -268,32 +275,42 @@ fun SoilTelemetryCard(
                 Text(
                     text = "Soil Telemetry ($nodeName)",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f, fill = false),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 BadgeText(
                     text = if (isOnline) "ONLINE" else "OFFLINE",
                     color = if (isOnline) Color(0xFF28A745) else Color(0xFF6C757D)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            BadgeText(text = "MEASURED TELEMETRY", color = MaterialTheme.colorScheme.secondary)
+            BadgeText(
+                text = "MEASURED TELEMETRY",
+                color = MaterialTheme.colorScheme.secondary
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 TelemetryMetricItem(
                     label = "Soil Moisture",
-                    value = reading?.soilMoisturePercent?.let { "%.1f %%".format(it) } ?: "--"
+                    value = reading?.soilMoisturePercent?.let { "%.1f %%".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
                 TelemetryMetricItem(
                     label = "Soil Temp",
-                    value = reading?.soilTemperatureCelsius?.let { "%.1f °C".format(it) } ?: "--"
+                    value = reading?.soilTemperatureCelsius?.let { "%.1f °C".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
                 TelemetryMetricItem(
                     label = "Soil EC",
-                    value = reading?.soilEcDsPerM?.let { "%.2f dS/m".format(it) } ?: "--"
+                    value = reading?.soilEcDsPerM?.let { "%.2f dS/m".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -307,35 +324,38 @@ fun WeatherCard(weather: WeatherData?) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Weather Context",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                BadgeText(text = "EXTERNAL FORECAST (CACHED)", color = Color(0xFF6C757D))
-            }
+            Text(
+                text = "Weather Context",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            BadgeText(
+                text = "EXTERNAL FORECAST (CACHED)",
+                color = MaterialTheme.colorScheme.secondary
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 TelemetryMetricItem(
                     label = "Rainfall",
-                    value = weather?.rainfallMm?.let { "%.1f mm".format(it) } ?: "--"
+                    value = weather?.rainfallMm?.let { "%.1f mm".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
                 TelemetryMetricItem(
                     label = "Air Temp",
-                    value = weather?.temperatureCelsius?.let { "%.1f °C".format(it) } ?: "--"
+                    value = weather?.temperatureCelsius?.let { "%.1f °C".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
                 TelemetryMetricItem(
                     label = "Humidity",
-                    value = weather?.humidityPercent?.let { "%.0f %%".format(it) } ?: "--"
+                    value = weather?.humidityPercent?.let { "%.0f %%".format(it) } ?: "--",
+                    modifier = Modifier.weight(1f)
                 )
             }
             if (weather?.conditionText != null) {
@@ -378,8 +398,12 @@ fun IrrigationStatusCard(
                 Text(
                     text = "Irrigation Status",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f, fill = false),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 BadgeText(text = actuatorText, color = actuatorColor)
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -394,7 +418,6 @@ fun IrrigationStatusCard(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Command lifecycle representation (strictly distinct from physical actuator state)
             if (latestCommand != null) {
                 val cmdText = when (latestCommand.lifecycleStatus) {
                     CommandLifecycleStatus.COMMAND_REQUESTED -> "Command Requested (Awaiting Sent)"
@@ -444,12 +467,16 @@ fun AlertsSummaryCard(alerts: List<Alert>) {
                         Text(
                             text = alert.title,
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = alert.message,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -464,18 +491,26 @@ fun AlertsSummaryCard(alerts: List<Alert>) {
 fun TelemetryMetricItem(
     label: String,
     value: String,
+    modifier: Modifier = Modifier,
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -484,9 +519,10 @@ fun TelemetryMetricItem(
 fun BadgeText(
     text: String,
     color: Color,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(color = color.copy(alpha = 0.15f), shape = RoundedCornerShape(4.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
@@ -494,7 +530,9 @@ fun BadgeText(
             text = text,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
