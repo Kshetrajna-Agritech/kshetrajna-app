@@ -17,6 +17,15 @@ data class SensorReading(
 )
 
 /**
+ * Consolidated domain model representing latest telemetry and chronological history for a node.
+ */
+data class SoilTelemetryData(
+    val node: Node? = null,
+    val latestReading: SensorReading? = null,
+    val historyReadings: List<SensorReading> = emptyList()
+)
+
+/**
  * App-entered manual pH measurement.
  * Strictly distinct from automated sensor telemetry.
  */
