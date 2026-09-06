@@ -36,7 +36,7 @@ class DashboardViewModel(
                         val isOffline = dashboardData.node?.isOnline == false
                         val uiStateData = DashboardUiState(
                             data = dashboardData,
-                            isOfflineNode = isOffline
+                            isOfflineNode = isOffline,
                         )
                         updateState(UiState.Success(uiStateData))
                     }
