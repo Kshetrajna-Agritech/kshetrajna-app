@@ -66,8 +66,8 @@ class Converters {
     fun toSensorSource(value: String?): SensorSource? = value?.let { SensorSource.valueOf(it) }
 
     @TypeConverter
-    fun fromSafetyFaultList(faults: List<SafetyFault>?): String? {
-        if (faults.isNullOrEmpty()) return null
+    fun fromSafetyFaultList(faults: List<SafetyFault>?): String {
+        if (faults.isNullOrEmpty()) return ""
         return faults.joinToString(";") { fault ->
             "${fault.type.name}|${fault.message.replace("|", "_").replace(";", "_")}|${fault.triggeredAtEpochMillis}"
         }

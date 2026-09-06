@@ -5,7 +5,6 @@ import com.kshetrajna.app.domain.model.SafetyFault
 import com.kshetrajna.app.domain.model.SafetyFaultType
 import com.kshetrajna.app.domain.model.SyncStatus
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -52,8 +51,8 @@ class ConvertersTest {
 
     @Test
     fun `SafetyFault empty or null list handling`() {
-        assertNull(converters.fromSafetyFaultList(null))
-        assertNull(converters.fromSafetyFaultList(emptyList()))
+        assertEquals("", converters.fromSafetyFaultList(null))
+        assertEquals("", converters.fromSafetyFaultList(emptyList()))
 
         assertTrue(converters.toSafetyFaultList(null).isEmpty())
         assertTrue(converters.toSafetyFaultList("").isEmpty())
