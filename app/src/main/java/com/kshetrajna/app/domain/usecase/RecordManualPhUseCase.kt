@@ -9,7 +9,8 @@ import java.util.UUID
 
 /**
  * Domain use case validating and recording a manual pH measurement entry.
- * Enforces exact domain boundaries [0.0, 14.0] and preserves MANUAL provenance semantics.
+ * Enforces input format validation (non-empty, valid numeric float) and preserves MANUAL provenance semantics.
+ * Note: Numerical domain range for pH remains TBD pending contract specification.
  */
 open class RecordManualPhUseCase(
     private val manualPhRepository: ManualPhRepository,
@@ -29,24 +30,16 @@ open class RecordManualPhUseCase(
         val parsedValue = trimmedInput.toFloatOrNull()
             ?: return Resource.Error("Please enter a valid numeric pH value.")
 
-        if (parsedValue !in 0.0f..14.0f) {
-            return Resource.Error("pH value must be within valid physical range [0.0, 14.0].")
-        }
-
-        val entry = try {
-            ManualPH(
-                id = "mph_${System.currentTimeMillis()}_${UUID.randomUUID().toString().take(8)}",
-                nodeId = nodeId,
-                timestampEpochMillis = timestampEpochMillis,
-                phValue = parsedValue,
-                notes = notes?.trim()?.ifEmpty { null },
-                enteredByUserId = enteredByUserId,
-                syncStatus = SyncStatus.PENDING,
-                category = MeasurementCategory.MANUAL
-            )
-        } catch (e: IllegalArgumentException) {
-            return Resource.Error(e.message ?: "Invalid pH value.")
-        }
+        val entry = ManualPH(
+            id = "mph_${System.currentTimeMillis()}_${UUID.randomUUID().toString().take(8)}",
+            nodeId = nodeId,
+            timestampEpochMillis = timestampEpochMillis,
+            phValue = parsedValue,
+            notes = notes?.trim()?.ifEmpty { null },
+            enteredByUserId = enteredByUserId,
+            syncStatus = SyncStatus.PENDING,
+            category = MeasurementCategory.MANUAL
+        )
 
         return manualPhRepository.recordManualPh(entry)
     }

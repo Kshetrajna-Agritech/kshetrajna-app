@@ -38,13 +38,7 @@ data class ManualPH(
     val enteredByUserId: String? = null,
     val syncStatus: SyncStatus = SyncStatus.PENDING,
     val category: MeasurementCategory = MeasurementCategory.MANUAL
-) {
-    init {
-        require(phValue in 0.0f..14.0f) {
-            "Manual pH value ($phValue) must be within valid physical range [0.0, 14.0]"
-        }
-    }
-}
+)
 
 /**
  * Laboratory soil sample analysis record.

@@ -23,7 +23,7 @@ import org.junit.Test
 class DomainModelInvariantsTest {
 
     @Test
-    fun `ManualPH enforces valid physical pH range and MANUAL category`() {
+    fun `ManualPH stores numeric value and enforces MANUAL category`() {
         val validPh = ManualPH(
             id = "mph-1",
             nodeId = "node-1",
@@ -32,26 +32,6 @@ class DomainModelInvariantsTest {
         )
         assertEquals(6.5f, validPh.phValue, 0.001f)
         assertEquals(MeasurementCategory.MANUAL, validPh.category)
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `ManualPH throws exception when pH value exceeds 14`() {
-        ManualPH(
-            id = "mph-invalid",
-            nodeId = "node-1",
-            timestampEpochMillis = 1000L,
-            phValue = 14.5f
-        )
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `ManualPH throws exception when pH value is below 0`() {
-        ManualPH(
-            id = "mph-invalid-neg",
-            nodeId = "node-1",
-            timestampEpochMillis = 1000L,
-            phValue = -0.5f
-        )
     }
 
     @Test
