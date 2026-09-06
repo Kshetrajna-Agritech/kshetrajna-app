@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kshetrajna.app.ui.dashboard.DashboardViewModel
+import com.kshetrajna.app.ui.manualph.ManualPhViewModel
 import com.kshetrajna.app.ui.navigation.KshetrajnaDestination
 import com.kshetrajna.app.ui.navigation.KshetrajnaNavGraph
 import com.kshetrajna.app.ui.soil.SoilViewModel
@@ -39,6 +40,7 @@ import com.kshetrajna.app.ui.soil.SoilViewModel
 fun KshetrajnaApp(
     dashboardViewModel: DashboardViewModel,
     soilViewModel: SoilViewModel,
+    manualPhViewModel: ManualPhViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -107,6 +109,7 @@ fun KshetrajnaApp(
             navController = navController,
             dashboardViewModel = dashboardViewModel,
             soilViewModel = soilViewModel,
+            manualPhViewModel = manualPhViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }

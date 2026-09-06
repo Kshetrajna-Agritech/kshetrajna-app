@@ -82,11 +82,6 @@ fun FoundationScreenContainer(
 }
 
 @Composable
-fun ManualPhScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
-    FoundationScreenContainer(title = "Manual pH Entry", viewModel = viewModel)
-}
-
-@Composable
 fun FertilityScreen(viewModel: FoundationViewModel = FoundationViewModel()) {
     FoundationScreenContainer(title = "Fertility & NPK Inferences", viewModel = viewModel)
 }
