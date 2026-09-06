@@ -74,3 +74,17 @@ data class Alert(
     val affectedZone: String? = null,
     val isAcknowledged: Boolean = false,
 )
+
+/**
+ * Composite domain representation for Irrigation UI state observation.
+ * Preserves explicit separation between command lifecycle, physical actuator state, and safety interlocks.
+ */
+data class IrrigationData(
+    val nodeId: String = "sim_node_01",
+    val latestIrrigationState: IrrigationState? = null,
+    val commandHistory: List<IrrigationCommand> = emptyList(),
+    val latestCommand: IrrigationCommand? = null,
+    val safetyState: SafetyState? = null,
+    val latestReading: SensorReading? = null,
+    val latestWeather: WeatherData? = null,
+)
