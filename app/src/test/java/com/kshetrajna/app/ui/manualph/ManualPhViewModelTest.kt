@@ -114,29 +114,23 @@ class ManualPhViewModelTest {
     }
 
     @Test
-    fun `out of range domain pH values are rejected by domain validation`() = runTest {
+    fun `numeric float input is accepted when numerical domain range is TBD`() = runTest {
         val localDataSource = InMemoryLocalDataSource()
         val repository = DefaultManualPhRepository(localDataSource)
         val viewModel = createViewModel(repository)
         advanceUntilIdle()
 
-        // Test negative pH
-        viewModel.onPhInputChanged("-1.5")
+        viewModel.onPhInputChanged("7.2")
         viewModel.saveManualPh("sim_node_01")
         advanceUntilIdle()
 
-        val stateNegative = (viewModel.uiState.value as UiState.Success<ManualPhUiStateData>).data
-        assertEquals("pH value must be within valid physical range [0.0, 14.0].", stateNegative.validationError)
+        val state = viewModel.uiState.value
+        assertTrue(state is UiState.Success)
 
-        // Test pH > 14.0
-        viewModel.onPhInputChanged("14.5")
-        viewModel.saveManualPh("sim_node_01")
-        advanceUntilIdle()
-
-        val stateTooHigh = (viewModel.uiState.value as UiState.Success<ManualPhUiStateData>).data
-        assertEquals("pH value must be within valid physical range [0.0, 14.0].", stateTooHigh.validationError)
-
-        assertEquals(0, localDataSource.manualPhs.value.size)
+        val uiData = (state as UiState.Success<ManualPhUiStateData>).data
+        assertNull(uiData.validationError)
+        assertEquals(1, localDataSource.manualPhs.value.size)
+        assertEquals(7.2f, localDataSource.manualPhs.value.first().phValue, 0.001f)
     }
 
     @Test

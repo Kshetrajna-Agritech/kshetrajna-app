@@ -203,7 +203,7 @@ fun ManualPhInputCard(
             OutlinedTextField(
                 value = phText,
                 onValueChange = onPhInputChanged,
-                label = { Text("Soil pH Value (0.0 - 14.0)") },
+                label = { Text("Soil pH Value") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth(),
